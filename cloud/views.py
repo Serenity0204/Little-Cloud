@@ -6,10 +6,25 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
+from .models import File
+from django.core.paginator import Paginator
 
 
 def home_view(request):
     return render(request, "home.html")
+
+
+@login_required(login_url="login")
+def all_files_view(request):
+    request.session.set_expiry(900)
+    files_list = File.objects.filter(user=request.user)
+
+    paginator = Paginator(files_list, 4)  # Show 4 files per page.
+    page_number = request.GET.get("page")
+    files = paginator.get_page(page_number)
+
+    context = {"files": files}
+    return render(request, "all_files.html", context)
 
 
 def login_view(request):

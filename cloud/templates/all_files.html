@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-center">All Files</h1>
+<ul class="list-group">
+    {% for file in files %}
+    <li class="list-group-item text-center">
+        <h1>{{ file.title }}</h1>
+        <small><p class="text-primary">Uploaded at <i>{{ file.created_at }}</i></p></small>
+        <p class="card-text">{{ file.description|truncatechars:150 }}</p>
+        <div>
+            <a class="btn btn-outline-success btn-sm" href="#">View</a>
+            <a class="btn btn-outline-success btn-sm" href="#">Download</a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="d-flex justify-content-center mt-4"> <!-- Added 'mt-4' for top margin -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if files.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ files.previous_page_number }}">previous</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link">&laquo; first</a></li>
+                <li class="page-item disabled"><a class="page-link">previous</a></li>
+            {% endif %}
+            
+            <li class="page-item active"><a class="page-link">Page {{ files.number }} of {{ files.paginator.num_pages }}</a></li>
+
+            {% if files.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ files.next_page_number }}">next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ files.paginator.num_pages }}">&raquo; last</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link">next</a></li>
+                <li class="page-item disabled"><a class="page-link">&raquo; last</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}
