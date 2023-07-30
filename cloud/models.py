@@ -19,7 +19,7 @@ class File(models.Model):
     img = models.ImageField(upload_to="imgs/", null=True, blank=True)
     pdf = models.FileField(upload_to="pdfs/", null=True, blank=True)
     doc = models.FileField(upload_to="docs/", null=True, blank=True)
-    text_content = models.TextField(null=True, blank=True)
+    txt = models.FileField(upload_to="txts/", null=True, blank=True)
 
     file_type = models.CharField(max_length=4, choices=FILE_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,4 +45,8 @@ def delete_file_on_delete(sender, instance, **kwargs):
 
     if instance.doc:
         # Delete the Document file
+        os.remove(instance.doc.path)
+
+    if instance.txt:
+        # Delete the Text file
         os.remove(instance.doc.path)

@@ -15,16 +15,31 @@ def home_view(request):
 
 
 @login_required(login_url="login")
-def all_files_view(request):
+def files_view(request, file_type=None):
     request.session.set_expiry(900)
     files_list = File.objects.filter(user=request.user)
+    if file_type == "img":
+        files_list = files_list.filter(file_type="img")
+    if file_type == "doc":
+        files_list = files_list.filter(file_type="doc")
+    if file_type == "txt":
+        files_list = files_list.filter(file_type="txt")
+    if file_type == "pdf":
+        files_list = files_list.filter(file_type="pdf")
 
     paginator = Paginator(files_list, 4)  # Show 4 files per page.
     page_number = request.GET.get("page")
     files = paginator.get_page(page_number)
-
-    context = {"files": files}
-    return render(request, "all_files.html", context)
+    type_map = {
+        "img": "All Image",
+        None: "All",
+        "doc": "All Document",
+        "txt": "All Text",
+        "pdf": "All PDF",
+    }
+    username = request.user.username
+    context = {"files": files, "type": type_map.get(file_type), "username": username}
+    return render(request, "files.html", context)
 
 
 def login_view(request):

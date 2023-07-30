@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="text-center">All Files</h1>
+<h1 class="text-center">{{ type }} Files</h1>
 <ul class="list-group">
+    {%if not files %}
+        <h1 class="text-center">Emtpy</h1>
+    {% endif %}
     {% for file in files %}
     <li class="list-group-item text-center">
         <h1>{{ file.title }}</h1>
-        <small><p class="text-primary">Uploaded at <i>{{ file.created_at }}</i></p></small>
-        <p class="card-text">{{ file.description|truncatechars:150 }}</p>
+        <small><p class="text-primary">Uploaded at {{ file.created_at }} by {{ username }}</p></small>
+        <p class="card-text" style="word-wrap: break-word; white-space: normal;">{{ file.description|truncatechars:150 }}</p>
         <div>
             <a class="btn btn-outline-success btn-sm" href="#">View</a>
             <a class="btn btn-outline-success btn-sm" href="#">Download</a>
