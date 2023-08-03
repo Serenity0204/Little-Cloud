@@ -15,6 +15,11 @@ def home_view(request):
 
 
 @login_required(login_url="login")
+def share_view(request, short_url):
+    return render(request, "home.html")
+
+
+@login_required(login_url="login")
 def files_view(request, file_type=None):
     request.session.set_expiry(900)
     files_list = File.objects.filter(user=request.user)
