@@ -57,7 +57,9 @@ def delete_file_on_delete(sender, instance, **kwargs):
 
 ## model for Short Url
 class ShortUrl(models.Model):
-    file = models.OneToOneField(File, on_delete=models.CASCADE)
+    file = models.OneToOneField(
+        File, on_delete=models.CASCADE, related_name="short_url"
+    )
     short_url = models.CharField(max_length=10, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

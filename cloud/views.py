@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib import messages
 from django.utils import timezone
-from .models import File
+from .models import File, ShortUrl
 from django.core.paginator import Paginator
 
 
@@ -17,7 +17,7 @@ def home_view(request):
 @login_required(login_url="login")
 def view_share_view(request, short_url):
     request.session.set_expiry(900)
-    return render(request, "home.html")
+    return render(request, "view_share.html")
 
 
 ## need to modify this later
@@ -28,8 +28,14 @@ def share_file_view(request, pk):
     # Toggle the value of is_shared (True to False, False to True)
     file.is_shared = not file.is_shared
     file.save()
+
+    # if not exists then create short url
+    exists = ShortUrl.objects.filter(file=file).exists()
+    if not exists:
+        ShortUrl.objects.create(file=file)
+
     # Redirect to the home view or any other desired view after toggling is_shared.
-    return redirect("home")
+    return redirect("all_files")
 
 
 @login_required(login_url="login")
@@ -56,7 +62,12 @@ def files_view(request, file_type=None):
         "pdf": "All PDF",
     }
     username = request.user.username
-    context = {"files": files, "type": type_map.get(file_type), "username": username}
+    context = {
+        "files": files,
+        "type": type_map.get(file_type),
+        "username": username,
+        "request": request,
+    }
     return render(request, "files.html", context)
 
 
