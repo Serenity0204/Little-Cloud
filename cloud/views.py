@@ -1,22 +1,35 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib import messages
 from django.utils import timezone
-from datetime import timedelta
 from .models import File
 from django.core.paginator import Paginator
 
 
 def home_view(request):
+    request.session.set_expiry(900)
     return render(request, "home.html")
 
 
 @login_required(login_url="login")
-def share_view(request, short_url):
+def view_share_view(request, short_url):
+    request.session.set_expiry(900)
     return render(request, "home.html")
+
+
+## need to modify this later
+@login_required(login_url="login")
+def share_file_view(request, pk):
+    request.session.set_expiry(900)
+    file = File.objects.get(pk=pk, user=request.user)
+    # Toggle the value of is_shared (True to False, False to True)
+    file.is_shared = not file.is_shared
+    file.save()
+    # Redirect to the home view or any other desired view after toggling is_shared.
+    return redirect("home")
 
 
 @login_required(login_url="login")

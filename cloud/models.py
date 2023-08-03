@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 import os
+import random
+import string
 
 
 # Create your models here.
@@ -21,6 +23,7 @@ class File(models.Model):
     doc = models.FileField(upload_to="docs/", null=True, blank=True)
     txt = models.FileField(upload_to="txts/", null=True, blank=True)
 
+    is_shared = models.BooleanField(default=False)
     file_type = models.CharField(max_length=4, choices=FILE_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -50,3 +53,25 @@ def delete_file_on_delete(sender, instance, **kwargs):
     if instance.txt:
         # Delete the Text file
         os.remove(instance.doc.path)
+
+
+## model for Short Url
+class ShortUrl(models.Model):
+    file = models.OneToOneField(File, on_delete=models.CASCADE)
+    short_url = models.CharField(max_length=10, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.short_url
+
+    def save(self, *args, **kwargs):
+        if not self.short_url:
+            self.short_url = self.generate_unique_short_url()
+        super(ShortUrl, self).save(*args, **kwargs)
+
+    def generate_unique_short_url(self, length=10):
+        characters = string.ascii_letters + string.digits
+        while True:
+            short_url = "".join(random.choice(characters) for _ in range(length))
+            if not ShortUrl.objects.filter(short_url=short_url).exists():
+                return short_url
