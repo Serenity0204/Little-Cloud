@@ -12,8 +12,19 @@
         <small><p class="text-primary">Uploaded at {{ file.created_at }} by {{ username }}</p></small>
         <p class="card-text" style="word-wrap: break-word; white-space: normal;">{{ file.description|truncatechars:150 }}</p>
         <div>
-            <a class="btn btn-outline-success btn-sm" href="#">View</a>
-            <a class="btn btn-outline-success btn-sm" href="#">Download</a>
+            {% if file.file_type == "img" %}
+                <a href="{{ file.img.url }}" class="btn btn-outline-success btn-sm" target="_blank">View</a>
+                <a href="{{ file.img.url }}" class="btn btn-outline-success btn-sm" download>Download</a>
+            {% elif file.file_type == "pdf" %}
+                <a href="{{ file.pdf.url }}" class="btn btn-outline-success btn-sm" target="_blank">View</a>
+                <a href="{{ file.pdf.url }}" class="btn btn-outline-success btn-sm" download>Download</a>
+            {% elif file.file_type == "doc" %}
+                <a href="{{ file.doc.url }}" class="btn btn-outline-success btn-sm" target="_blank">Download to View</a>
+            {% elif file.file_type == "txt" %}
+                <a href="{{ file.txt.url }}" class="btn btn-outline-success btn-sm" target="_blank">View</a>
+                <a href="{{ file.txt.url }}" class="btn btn-outline-success btn-sm" download>Download</a>
+            {% endif %}
+
             {% if not file.is_shared %}
                 <a class="btn btn-outline-info btn-sm" href="{% url 'share_file' pk=file.pk %}">Share File</a>
             {% else %}

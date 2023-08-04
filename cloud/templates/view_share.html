@@ -1,20 +1,39 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-<h1 class="text-center">{{ file.title }}</h1>
+<div class="card mt-4">
+  <div class="card-body text-center">
+    <h1 class="card-title mt-3">{{ file.title }}</h1>
+    <p class="card-text mt-3">{{ file.description }}</p>
+    
+    <div class="image-container mt-3">
+      {% if file.file_type == "img" %}
+        <img class="card-img-top" src="{% static 'img/image_file.png' %}" alt="img" style="max-width: 50%; max-height: 500px;">
+      {% elif file.file_type == "pdf" %}
+        <img class="card-img-top" src="{% static 'img/pdf_file.png' %}" alt="pdf" style="max-width: 50%; max-height: 500px;">
+      {% elif file.file_type == "doc" %}
+        <img class="card-img-top" src="{% static 'img/doc_file.png' %}" alt="doc" style="max-width: 50%; max-height: 500px;">
+      {% elif file.file_type == "txt" %}
+        <img class="card-img-top" src="{% static 'img/text_file.png' %}" alt="text" style="max-width: 50%; max-height: 500px;">
+      {% endif %}
+    </div>
 
-<p>{{ file.description }}</p>
+    <div class="buttons-container mt-3">
+      {% if file.file_type == "img" %}
+        <a href="{{ file.img.url }}" class="btn btn-primary" target="_blank">View Image</a>
+        <a href="{{ file.img.url }}" class="btn btn-secondary" download>Download Image</a>
+      {% elif file.file_type == "pdf" %}
+        <a href="{{ file.pdf.url }}" class="btn btn-primary" target="_blank">View PDF</a>
+        <a href="{{ file.pdf.url }}" class="btn btn-secondary" download>Download PDF</a>
+      {% elif file.file_type == "doc" %}
+        <a href="{{ file.doc.url }}" class="btn btn-primary" target="_blank">Download to View Document</a>
+      {% elif file.file_type == "txt" %}
+        <a href="{{ file.txt.url }}" class="btn btn-primary" target="_blank">View Text File</a>
+        <a href="{{ file.txt.url }}" class="btn btn-secondary" download>Download Text File</a>
+      {% endif %}
+    </div>
 
-{% if file.file_type == "img" %}
-  <a href="{{ file.img.url }}" target="_blank">View Image</a>
-{% elif file.file_type == "pdf" %}
-  <a href="{{ file.pdf.url }}" target="_blank">View PDF</a>
-{% elif file.file_type == "doc" %}
-  <a href="{{ file.doc.url }}" target="_blank">View Document</a>
-{% elif file.file_type == "txt" %}
-  <a href="{{ file.txt.url }}" target="_blank">View Text File</a>
-{% endif %}
-
-<p>Created at: {{ file.created_at }}</p>
-
+    <p class="card-text mt-3">Created at: {{ file.created_at }}</p>
+  </div>
+</div>
 {% endblock %}

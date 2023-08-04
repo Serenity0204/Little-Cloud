@@ -27,7 +27,6 @@ def view_share_view(request, short_url):
     return render(request, "view_share.html", context)
 
 
-## need to modify this later
 @login_required(login_url="login")
 def share_file_view(request, pk):
     request.session.set_expiry(900)
@@ -41,8 +40,10 @@ def share_file_view(request, pk):
     if not exists:
         ShortUrl.objects.create(file=file)
 
-    # Redirect to the home view or any other desired view after toggling is_shared.
-    return redirect("all_files")
+    # Get the previous URL from the request.META dictionary
+    previous_url = request.META.get("HTTP_REFERER", "/")
+    # Use the redirect function to redirect to the previous URL
+    return redirect(previous_url)
 
 
 @login_required(login_url="login")
