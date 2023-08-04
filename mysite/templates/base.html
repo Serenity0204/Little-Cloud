@@ -28,8 +28,13 @@
       href="{% static 'img/eduboost.ico' %}"
     />
     <style>
+      
       html,
       body {
+        background-color: #c3eb95;
+        background-image: 
+            radial-gradient(at 47% 33%, hsl(162.00, 77%, 40%) 0, transparent 59%), 
+            radial-gradient(at 82% 65%, hsl(198.00, 100%, 50%) 0, transparent 55%);
         height: 100%;
       }
 
@@ -67,6 +72,9 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <!-- Added ml-auto class -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Home</a>
+          </li>
           {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'upload' %}">Upload</a>
