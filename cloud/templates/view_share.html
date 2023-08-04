@@ -1,5 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="text-center">Ok</h1>
+<h1 class="text-center">{{ file.title }}</h1>
+
+<p>{{ file.description }}</p>
+
+{% if file.file_type == "img" %}
+  <a href="{{ file.img.url }}" target="_blank">View Image</a>
+{% elif file.file_type == "pdf" %}
+  <a href="{{ file.pdf.url }}" target="_blank">View PDF</a>
+{% elif file.file_type == "doc" %}
+  <a href="{{ file.doc.url }}" target="_blank">View Document</a>
+{% elif file.file_type == "txt" %}
+  <a href="{{ file.txt.url }}" target="_blank">View Text File</a>
+{% endif %}
+
+<p>Created at: {{ file.created_at }}</p>
+
 {% endblock %}

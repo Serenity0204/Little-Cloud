@@ -1,10 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib import messages
-from django.utils import timezone
 from .models import File, ShortUrl
 from django.core.paginator import Paginator
 
@@ -17,7 +16,15 @@ def home_view(request):
 @login_required(login_url="login")
 def view_share_view(request, short_url):
     request.session.set_expiry(900)
-    return render(request, "view_share.html")
+    exists = ShortUrl.objects.filter(short_url=short_url).exists()
+    if not exists:
+        return redirect("all_files")
+    shorturl = get_object_or_404(ShortUrl, short_url=short_url)
+    if not shorturl.file.is_shared:
+        return redirect("all_files")
+    ## if exists and it's shared then give the file to context
+    context = {"file": shorturl.file}
+    return render(request, "view_share.html", context)
 
 
 ## need to modify this later

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import File
+from .models import File, ShortUrl
 
 
 # Register your models here.
@@ -11,3 +11,5 @@ class FileAdmin(admin.ModelAdmin):
 
 # Register the File model with the custom admin class
 admin.site.register(File, FileAdmin)
+
+admin.site.register(ShortUrl)
