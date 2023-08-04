@@ -23,4 +23,5 @@ urlpatterns = [
     path("share/<int:pk>/", views.share_file_view, name="share_file"),
     path("upload/", views.upload_view, name="upload"),
     path("delete/<int:pk>/", views.delete_file_view, name="delete_file"),
+    path("search/", views.search_view, name="search"),
 ]

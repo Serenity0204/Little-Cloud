@@ -9,7 +9,7 @@
     {% for file in files %}
     <li class="list-group-item text-center mb-3 border border-2 border-primary">
         <h1>{{ file.title }}</h1>
-        <small><p class="text-primary">A {{ file.file_type }} Uploaded at {{ file.created_at }} by {{ username }}</p></small>
+        <small><p class="text-primary">{{ file.file_type }} Uploaded at {{ file.created_at }} by {{ username }}</p></small>
         <p class="card-text" style="word-wrap: break-word; white-space: normal;">{{ file.description|truncatechars:150 }}</p>
         <div>
             {% if file.file_type == "img" %}

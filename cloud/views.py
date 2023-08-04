@@ -81,6 +81,56 @@ def files_view(request, file_type=None):
 
 
 @login_required(login_url="login")
+def search_view(request):
+    query = request.GET.get("query")
+    results = []
+
+    # if empty query just redirect to where it came
+    previous_url = request.META.get("HTTP_REFERER", "/")
+    if not query:
+        return redirect(previous_url)
+
+    ## query exists, find prvious url first
+    file_type = ""
+    if previous_url.endswith("files/imgs/"):
+        file_type = "img"
+    if previous_url.endswith("files/docs/"):
+        file_type = "doc"
+    if previous_url.endswith("files/pdfs/"):
+        file_type = "pdf"
+    if previous_url.endswith("files/txts/"):
+        file_type = "txt"
+
+    ## add additional query conditions if there is one for search under current file type
+    if len(file_type) == 0:
+        files_list = File.objects.filter(user=request.user, title__startswith=query)
+    else:
+        files_list = File.objects.filter(
+            user=request.user, title__startswith=query, file_type=file_type
+        )
+
+    paginator = Paginator(files_list, 4)  # Show 4 files per page.
+    page_number = request.GET.get("page")
+    files = paginator.get_page(page_number)
+
+    type_map = {
+        "img": "All Image",
+        "": "All",
+        "doc": "All Document",
+        "txt": "All Text",
+        "pdf": "All PDF",
+    }
+    username = request.user.username
+    context = {
+        "files": files,
+        "type": type_map.get(file_type),
+        "username": username,
+        "request": request,
+    }
+    return render(request, "files.html", context)
+
+
+@login_required(login_url="login")
 def upload_view(request):
     request.session.set_expiry(900)
     if request.method == "POST":
