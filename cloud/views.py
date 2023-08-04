@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from .models import File, ShortUrl
 from django.core.paginator import Paginator
+from .forms import FileUploadForm
 
 
 def home_view(request):
@@ -77,6 +78,42 @@ def files_view(request, file_type=None):
         "request": request,
     }
     return render(request, "files.html", context)
+
+
+@login_required(login_url="login")
+def upload_view(request):
+    request.session.set_expiry(900)
+    if request.method == "POST":
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file_instance = form.save(commit=False)
+            # Associate the uploaded file with the user
+            file_instance.user = request.user
+            file_instance.file_type = form.cleaned_data["file_type"]
+
+            # make sure not empty
+            if file_instance.is_empty():
+                messages.error(request, "Failed to Upload")
+                form = FileUploadForm()
+                context = {"form": form}
+                return render(request, "upload.html", context)
+            file_instance.save()
+            return redirect("all_files")
+    else:
+        form = FileUploadForm()
+    context = {"form": form}
+    return render(request, "upload.html", context)
+
+
+@login_required(login_url="login")
+def delete_file_view(request, pk):
+    file = get_object_or_404(File, pk=pk)
+    if request.method == "POST":
+        file.delete()
+    # Get the previous URL from the request.META dictionary
+    previous_url = request.META.get("HTTP_REFERER", "/")
+    # Use the redirect function to redirect to the previous URL
+    return redirect(previous_url)
 
 
 def login_view(request):

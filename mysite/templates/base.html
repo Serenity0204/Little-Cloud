@@ -69,19 +69,22 @@
           <!-- Added ml-auto class -->
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'all_files' %}">All Files</a>
+            <a class="nav-link" href="{% url 'upload' %}">Upload</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'img_files' %}">Image Files</a>
+            <a class="nav-link" href="{% url 'all_files' %}">All</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'pdf_files' %}">PDF Files</a>
+            <a class="nav-link" href="{% url 'img_files' %}">Image</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'doc_files' %}">Doc Files</a>
+            <a class="nav-link" href="{% url 'pdf_files' %}">PDF</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'txt_files' %}">Text Files</a>
+            <a class="nav-link" href="{% url 'doc_files' %}">Doc</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'txt_files' %}">Text</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">Logout</a>

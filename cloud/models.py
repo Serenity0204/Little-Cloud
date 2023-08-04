@@ -27,6 +27,22 @@ class File(models.Model):
     file_type = models.CharField(max_length=4, choices=FILE_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # for validation
+    def is_empty(self):
+        # image
+        if self.file_type == "img":
+            return not self.img
+        # pdf
+        if self.file_type == "pdf":
+            return not self.pdf
+        # doc
+        if self.file_type == "doc":
+            return not self.doc
+        # text
+        if self.file_type == "txt":
+            return not self.txt
+        return True
+
     def __str__(self):
         return self.title
 

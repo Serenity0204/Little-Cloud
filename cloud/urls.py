@@ -21,4 +21,6 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("view-share/<str:short_url>/", views.view_share_view, name="view_share"),
     path("share/<int:pk>/", views.share_file_view, name="share_file"),
+    path("upload/", views.upload_view, name="upload"),
+    path("delete/<int:pk>/", views.delete_file_view, name="delete_file"),
 ]

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <h2 class = "text-center">Upload File</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <script>
+            const fileTypes = {
+                img: document.getElementById("id_img"),
+                pdf: document.getElementById("id_pdf"),
+                doc: document.getElementById("id_doc"),
+                txt: document.getElementById("id_txt"),
+            };
+
+            // Initial hiding of all fields
+            for (const type in fileTypes) {
+                fileTypes[type].parentNode.style.display = "none";
+            }
+
+            document.getElementById("id_file_type").addEventListener("change", function () {
+                const selectedType = this.value;
+                for (const type in fileTypes) {
+                    if (type === selectedType) {
+                        fileTypes[type].parentNode.style.display = "block";
+                    } else {
+                        fileTypes[type].parentNode.style.display = "none";
+                    }
+                }
+            });
+        </script>
+        <div class="d-flex justify-content-center align-items-center">
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </div>  
+    </form>
+</div>
+{% endblock %}

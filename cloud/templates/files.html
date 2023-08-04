@@ -9,21 +9,25 @@
     {% for file in files %}
     <li class="list-group-item text-center mb-3 border border-2 border-primary">
         <h1>{{ file.title }}</h1>
-        <small><p class="text-primary">Uploaded at {{ file.created_at }} by {{ username }}</p></small>
+        <small><p class="text-primary">A {{ file.file_type }} Uploaded at {{ file.created_at }} by {{ username }}</p></small>
         <p class="card-text" style="word-wrap: break-word; white-space: normal;">{{ file.description|truncatechars:150 }}</p>
         <div>
             {% if file.file_type == "img" %}
-                <a href="{{ file.img.url }}" class="btn btn-outline-success btn-sm" target="_blank">View</a>
+                <a href="{{ file.img.url }}" class="btn btn-outline-primary btn-sm" target="_blank">View</a>
                 <a href="{{ file.img.url }}" class="btn btn-outline-success btn-sm" download>Download</a>
             {% elif file.file_type == "pdf" %}
-                <a href="{{ file.pdf.url }}" class="btn btn-outline-success btn-sm" target="_blank">View</a>
+                <a href="{{ file.pdf.url }}" class="btn btn-outline-primary btn-sm" target="_blank">View</a>
                 <a href="{{ file.pdf.url }}" class="btn btn-outline-success btn-sm" download>Download</a>
             {% elif file.file_type == "doc" %}
-                <a href="{{ file.doc.url }}" class="btn btn-outline-success btn-sm" target="_blank">Download to View</a>
+                <a href="{{ file.doc.url }}" class="btn btn-outline-primary btn-sm" target="_blank">Download to View</a>
             {% elif file.file_type == "txt" %}
-                <a href="{{ file.txt.url }}" class="btn btn-outline-success btn-sm" target="_blank">View</a>
+                <a href="{{ file.txt.url }}" class="btn btn-outline-primary btn-sm" target="_blank">View</a>
                 <a href="{{ file.txt.url }}" class="btn btn-outline-success btn-sm" download>Download</a>
             {% endif %}
+            <form method="POST" action="{% url 'delete_file' file.id %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" onclick="return confirm('Are you sure to delete?')" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
 
             {% if not file.is_shared %}
                 <a class="btn btn-outline-info btn-sm" href="{% url 'share_file' pk=file.pk %}">Share File</a>
@@ -36,6 +40,7 @@
                     <button class="btn btn-outline-secondary btn-sm" onclick="copyToClipboard('{{ file.pk }}')">Copy Link</button>
                 </div>
             {% endif %}
+
         </div>
     </li>
     {% endfor %}
