@@ -68,7 +68,7 @@ def delete_file_on_delete(sender, instance, **kwargs):
 
     if instance.txt:
         # Delete the Text file
-        os.remove(instance.doc.path)
+        os.remove(instance.txt.path)
 
 
 ## model for Short Url
