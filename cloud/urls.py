@@ -1,6 +1,7 @@
 from django.urls import path, include
 from . import views
 
+
 urlpatterns = [
     path("", views.home_view, name="home"),
     path("files/", views.files_view, name="all_files"),  # For all files
@@ -24,4 +25,6 @@ urlpatterns = [
     path("upload/", views.upload_view, name="upload"),
     path("delete/<int:pk>/", views.delete_file_view, name="delete_file"),
     path("search/", views.search_view, name="search"),
+    path("my-urls/", views.my_urls_view, name="my_urls"),
+    path("delete-my-url/<int:pk>/", views.delete_my_url_view, name="delete_my_url"),
 ]

@@ -78,6 +78,7 @@ class ShortUrl(models.Model):
     )
     short_url = models.CharField(max_length=10, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    viewers = models.ManyToManyField(User, related_name="short_urls")
 
     def __str__(self):
         return self.short_url
@@ -86,6 +87,10 @@ class ShortUrl(models.Model):
         if not self.short_url:
             self.short_url = self.generate_unique_short_url()
         super(ShortUrl, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.viewers.clear()
+        super(ShortUrl, self).delete(*args, **kwargs)
 
     def generate_unique_short_url(self, length=10):
         characters = string.ascii_letters + string.digits

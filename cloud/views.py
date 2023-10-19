@@ -24,6 +24,9 @@ def view_share_view(request, short_url):
     if not shorturl.file.is_shared:
         return redirect("all_files")
     ## if exists and it's shared then give the file to context
+    # add viewers first only if the file is not mine
+    if shorturl.file.user != request.user:
+        shorturl.viewers.add(request.user)
     context = {"file": shorturl.file}
     return render(request, "view_share.html", context)
 
@@ -222,3 +225,30 @@ def logout_view(request):
     logout(request)
     messages.success(request, "User Logged Out")
     return redirect("login")
+
+
+@login_required(login_url="login")
+def my_urls_view(request):
+    urls = ShortUrl.objects.filter(viewers=request.user)
+    valid_urls_list = urls.filter(file__is_shared=True)
+
+    paginator = Paginator(valid_urls_list, 4)  # Show 5 urls per page.
+    page_number = request.GET.get("page")
+    valid_urls = paginator.get_page(page_number)
+    context = {"urls": valid_urls}
+    return render(request, "my_urls.html", context)
+
+
+@login_required(login_url="login")
+def delete_my_url_view(request, pk):
+    # get url
+    url = get_object_or_404(ShortUrl, pk=pk)
+
+    # Remove request.user from viewers
+    if request.method == "POST":
+        url.viewers.remove(request.user)
+
+    # Get the previous URL from the request.META dictionary
+    previous_url = request.META.get("HTTP_REFERER", "/")
+    # Use the redirect function to redirect to the previous URL
+    return redirect(previous_url)
