@@ -27,5 +27,5 @@ urlpatterns = [
     path("search/", views.search_view, name="search"),
     path("my-urls/", views.my_urls_view, name="my_urls"),
     path("delete-my-url/<int:pk>/", views.delete_my_url_view, name="delete_my_url"),
-    path("send-others/", views.send_others_view, name="send_others"),
+    path("share-others/", views.share_others_view, name="share_others"),
 ]

@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if messages %}
+{% for message in messages %}
+    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+        {{ message }}
+    </div>
+{% endfor %}
+{% endif %}
 <div class="container mt-4" style="font-size: 25px;">
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
     <h2 class = "text-center">Upload File</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}

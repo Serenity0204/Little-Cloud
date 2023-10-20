@@ -5,6 +5,7 @@ from .models import File
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = File
+
         fields = ("title", "description", "file_type", "img", "pdf", "doc", "txt")
 
         widgets = {
@@ -26,13 +27,14 @@ class FileUploadForm(forms.ModelForm):
         }
 
 
-class SendFileForm(forms.Form):
+class ShareFileForm(forms.Form):
     recipient_username = forms.CharField(
         label="Recipient's Username",
         max_length=100,
         required=True,
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
+
     selected_file = forms.ModelChoiceField(
         queryset=File.objects.none(),
         label="Select File",
@@ -42,5 +44,6 @@ class SendFileForm(forms.Form):
     )
 
     def __init__(self, user, *args, **kwargs):
-        super(SendFileForm, self).__init__(*args, **kwargs)
+        super(ShareFileForm, self).__init__(*args, **kwargs)
+
         self.fields["selected_file"].queryset = File.objects.filter(user=user)
