@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from .models import File, ShortUrl
 from django.core.paginator import Paginator
-from .forms import FileUploadForm
+from .forms import FileUploadForm, SendFileForm
 
 
 def home_view(request):
@@ -252,3 +252,47 @@ def delete_my_url_view(request, pk):
     previous_url = request.META.get("HTTP_REFERER", "/")
     # Use the redirect function to redirect to the previous URL
     return redirect(previous_url)
+
+
+@login_required(login_url="login")
+def send_others_view(request):
+    if request.method == "POST":
+        form = SendFileForm(request.user, request.POST)
+        if form.is_valid():
+            recipient_username = form.cleaned_data["recipient_username"]
+            selected_file = form.cleaned_data["selected_file"]
+
+            # check if user exists
+            try:
+                user = User.objects.get(username=recipient_username)
+            except User.DoesNotExist:
+                user = None
+
+            if user is None:
+                messages.error(request, "Invalid Username: " + recipient_username)
+                return redirect("send_others")
+
+            # if exists, share to the user
+            file = File.objects.get(title=selected_file, user=request.user)
+            # is shared to true
+            file.is_shared = True
+            file.save()
+
+            # if not exists then create short url
+            short_url, _ = ShortUrl.objects.get_or_create(file=file)
+            short_url.viewers.add(user)
+
+            messages.success(
+                request,
+                "Successfully Shared "
+                + str(selected_file)
+                + " To "
+                + recipient_username,
+            )
+
+            return redirect("send_others")
+    else:
+        form = SendFileForm(request.user)
+
+    context = {"form": form}
+    return render(request, "send.html", context)

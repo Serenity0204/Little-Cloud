@@ -4,7 +4,9 @@
 <h2>Login</h2>
 {% if messages %}
 {% for message in messages %}
-<div class="alert alert-danger">{{ message }}</div>
+    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+        {{ message }}
+    </div>
 {% endfor %}
 {% endif %}
 <form method="POST">

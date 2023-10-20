@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4" style="font-size: 25px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" style="font-size: 15px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2 class="text-center">Send File to Others</h2>
+    <div class="text-center">
+        <img src="{% static 'img/file-sharing.png' %}" alt="Little Cloud Logo" class="img-fluid fade-in rounded-image" style="max-width: 375px;">
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+            {{ form.recipient_username.label_tag }}
+            {{ form.recipient_username }}
+            {{ form.recipient_username.errors }}
+        </div>
+        <div class="mb-3">
+            {{ form.selected_file.label_tag }}
+            {{ form.selected_file }}
+            {{ form.selected_file.errors }}
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

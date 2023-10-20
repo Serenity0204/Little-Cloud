@@ -14,6 +14,10 @@ for managing and sharing files in the cloud.
 ![upload.png](./demo/upload.png)
 * View Files By Category
 ![category.png](./demo/category.png)
+* Share To Others
+![share-others.png](./demo/share-others.png)
+* See Others' Shares To Me
+![share-me.png](./demo/share-me.png)
 * View Shared Files
 ![view-share.png](./demo/view-share.png)
 * Search Files Under Current Category

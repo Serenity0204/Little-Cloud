@@ -16,7 +16,7 @@ class File(models.Model):
         ("txt", "Text"),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=35)
+    title = models.CharField(max_length=35, unique=True)
     description = models.TextField(max_length=350)
     img = models.ImageField(upload_to="imgs/", null=True, blank=True)
     pdf = models.FileField(upload_to="pdfs/", null=True, blank=True)
